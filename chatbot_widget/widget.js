@@ -14,32 +14,40 @@ function toggleChat() {
 }
 
 
-async function sendMessage(message) {
-  // Show temporary loading message
-  const loadingMessage = appendMessage("...", "bot-message");
+async function sendMessage() {
+  const input = document.getElementById("chat-input");
+  const message = input.value.trim();
+
+  if (!message) return;
+
+  // Display user's message (optional depending on your widget)
+  displayMessage(message, "user");
+
+  // Clear input field
+  input.value = "";
 
   try {
-    const response = await fetch("https://your-backend-url.com/ask", {
+    const response = await fetch("https://chatbot-backend-hxus.onrender.com/ask", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ query: message })
+      body: JSON.stringify({ query: message })  // <-- this is the key
     });
-
-    if (!response.ok) {
-      throw new Error(`Server error: ${response.status}`);
-    }
 
     const data = await response.json();
 
-    // Replace the loading message with the actual bot response
-    loadingMessage.textContent = data.response;
-  } catch (err) {
-    console.error("Fetch error:", err);
-    loadingMessage.textContent = "Something went wrong. Please try again.";
+    // Display bot's response
+    displayMessage(data.response || "No response", "bot");
+  } catch (error) {
+    console.error("Error sending message:", error);
+    displayMessage("Error contacting server.", "bot");
   }
+  input.disabled = false;
+  sendBtn.disabled = false;
+  input.focus();
 }
+
 
 function appendMessage(text, className) {
   const chatMessages = document.getElementById("chat-messages");
