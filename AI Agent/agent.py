@@ -5,6 +5,7 @@ import json
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from starlette.responses import JSONResponse
 
 app = FastAPI()
 # Allow only chatbot site
@@ -42,10 +43,11 @@ class QueryStructure(BaseModel):
 
 
 @app.post("/ask")
-def ask_bot(_input: QueryStructure):
-    print(_input)
-    print(_input.query)
-    query = _input.query
+def ask(_input: QueryStructure):
+    ask_bot(_input.query)
+
+
+def ask_bot(query):
     print("Loading...")
     context = ""  # TODO: Replace with vector.get_similar(query)
     prompt = generate_prompt(query, context)
@@ -73,4 +75,7 @@ def ask_bot(_input: QueryStructure):
     TEMP_CHAT_HISTORY.append({"role": "user", "message": _answer})
     TEMP_CHAT_HISTORY.append({"role": "bot", "message": _answer})
 
-    return {"response": _answer, "tool": _tool}
+    return JSONResponse(content={
+        "response": _answer,
+        "tool": _tool}
+    )
