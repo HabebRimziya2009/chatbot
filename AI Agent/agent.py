@@ -4,6 +4,7 @@ import json
 # import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
 app = FastAPI()
 # Allow only chatbot site
@@ -31,12 +32,12 @@ def generate_prompt(query, context):
     return prompt.format(query=query, context=context)
 
 
-class AnswerStructure:
+class AnswerStructure(BaseModel):
     answer: str
     tool: str
 
 
-class QueryStructure:
+class QueryStructure(BaseModel):
     query: str
 
 
