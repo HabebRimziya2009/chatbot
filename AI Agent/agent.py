@@ -11,7 +11,8 @@ app = FastAPI()
 # noinspection PyTypeChecker
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://euphonious-alfajores-3ae39a.netlify.app"],
+    allow_origins=["https://euphonious-alfajores-3ae39a.netlify.app",
+                   "https://heartfelt-sable-43cd6e.netlify.app/"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
