@@ -9,14 +9,6 @@ from starlette.responses import JSONResponse
 
 app = FastAPI()
 # Allow only chatbot site
-# noinspection PyTypeChecker
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key="AIzaSyCvxwnQ3w0ENoTe5u68W1-HXTdgKlspBAk")
@@ -43,10 +35,6 @@ class QueryStructure(BaseModel):
 
 
 @app.post("/ask")
-def ask(_input: QueryStructure):
-    ask_bot(_input.query)
-
-
 def ask_bot(query):
     print("Loading...")
     context = ""  # TODO: Replace with vector.get_similar(query)
@@ -70,7 +58,7 @@ def ask_bot(query):
     print(data)
 
     _answer = data["answer"]
-    _tool = bool(data["tool"]) if "tool" in data.keys() else False
+    _tool = data["tool"] if "tool" in data.keys() else "NOTOOL"
 
     TEMP_CHAT_HISTORY.append({"role": "user", "message": _answer})
     TEMP_CHAT_HISTORY.append({"role": "bot", "message": _answer})

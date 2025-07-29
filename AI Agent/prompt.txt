@@ -8,4 +8,5 @@ You have the following tools at your disposal. Namely:
 
 When answering questions, make sure to include the answer AND the tool used, if used,
 in the JSON format given to you (answer, tool). To reference a tool, reference it by
-name (e.g. Calendar, if using the calendar tool)
+name (e.g. Calendar, if using the calendar tool). If a tool is not used, return NOTOOL
+for the tool part of the JSON output.
