@@ -1,18 +1,37 @@
 import google.generativeai as genai
 import json
-# import vector
-# import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from starlette.responses import JSONResponse
-
-app = FastAPI()
-# Allow only chatbot site
+from pydantic import BaseModel, Field
 
 # GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 genai.configure(api_key="AIzaSyCvxwnQ3w0ENoTe5u68W1-HXTdgKlspBAk")
 TEMP_CHAT_HISTORY = []
+
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Change to your frontend domains in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
+class QueryRequest(BaseModel):
+    query: str
+
+
+class AnswerStructure(BaseModel):
+    answer: str = Field(description="The answer to the user's question")
+    send: bool = Field(description="Should the question be sent to a human colleague? (True/False)")
+
+
+@app.post("/ask")
+async def ask(req: QueryRequest):
+    response, tool = ask_bot(req.query)
+    return {"response": response, "tool": tool}
 
 
 def generate_prompt(query, context):
@@ -25,16 +44,6 @@ def generate_prompt(query, context):
     return prompt.format(query=query, context=context)
 
 
-class AnswerStructure(BaseModel):
-    answer: str
-    tool: str
-
-
-class QueryStructure(BaseModel):
-    query: str
-
-
-@app.post("/ask")
 def ask_bot(query):
     print("Loading...")
     context = ""  # TODO: Replace with vector.get_similar(query)
@@ -63,7 +72,4 @@ def ask_bot(query):
     TEMP_CHAT_HISTORY.append({"role": "user", "message": _answer})
     TEMP_CHAT_HISTORY.append({"role": "bot", "message": _answer})
 
-    return JSONResponse(content={
-        "response": _answer,
-        "tool": _tool}
-    )
+    return _answer, _tool

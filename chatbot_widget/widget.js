@@ -14,23 +14,12 @@ function toggleChat() {
 }
 
 
-async function sendMessage() {
-  const input = document.getElementById("chat-input");
-  const sendBtn = document.getElementById("chat-send");
-  const message = input.value.trim();
-  if (!message) return;
-
-  input.disabled = true;
-  sendBtn.disabled = true;
-
-  appendMessage(message, "user-message");
-  input.value = "";
-
-  // Show loading message
+async function sendMessage(message) {
+  // Show temporary loading message
   const loadingMessage = appendMessage("...", "bot-message");
 
   try {
-    const response = await fetch("https://chatbot-backend-hxus.onrender.com/ask", {
+    const response = await fetch("https://your-backend-url.com/ask", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -44,16 +33,12 @@ async function sendMessage() {
 
     const data = await response.json();
 
-    // Replace "..." with actual response
+    // Replace the loading message with the actual bot response
     loadingMessage.textContent = data.response;
   } catch (err) {
-    console.error(err);
+    console.error("Fetch error:", err);
     loadingMessage.textContent = "Something went wrong. Please try again.";
   }
-
-  input.disabled = false;
-  sendBtn.disabled = false;
-  input.focus();
 }
 
 function appendMessage(text, className) {
