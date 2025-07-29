@@ -35,7 +35,7 @@ async def ask(req: QueryRequest):
 
 
 def generate_prompt(query, context):
-    with open("prompt.txt", "r") as file:
+    with open("./prompt.txt", "r") as file:
         prompt = ''.join(
             '\n' if line == '\n' or line.rstrip('\n').endswith(':') else line.rstrip('\n')
             for line in file
