@@ -20,9 +20,6 @@ async function sendMessage() {
 
   if (!message) return;
 
-  // Display user's message (optional depending on your widget)
-  displayMessage(message, "user");
-
   // Clear input field
   input.value = "";
 
