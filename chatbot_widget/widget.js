@@ -14,28 +14,42 @@ function toggleChat() {
 }
 
 
-function sendMessage() {
+async function sendMessage() {
   const input = document.getElementById("chat-input");
   const sendBtn = document.getElementById("chat-send");
   const message = input.value.trim();
   if (!message) return;
 
-  // Disable input and button while bot is "typing"
   input.disabled = true;
   sendBtn.disabled = true;
 
   appendMessage(message, "user-message");
   input.value = "";
 
-  // Fake bot response delay
-  setTimeout(() => {
-    appendMessage("Thanks! Let me get back to you on that.", "bot-message");
+  // Show loading message
+  const loadingMessage = appendMessage("...", "bot-message");
 
-    // Re-enable input and button
-    input.disabled = false;
-    sendBtn.disabled = false;
-    input.focus();
-  }, 1500);
+  try {
+    const response = await fetch("0.0.0.0:8000/ask", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ message })
+    });
+
+    const data = await response.json();
+
+    // Replace "..." with actual response
+    loadingMessage.textContent = data.response;
+  } catch (err) {
+    console.error(err);
+    loadingMessage.textContent = "Something went wrong. Please try again.";
+  }
+
+  input.disabled = false;
+  sendBtn.disabled = false;
+  input.focus();
 }
 
 function appendMessage(text, className) {
