@@ -36,9 +36,14 @@ class AnswerStructure:
     tool: str
 
 
+class QueryStructure:
+    query: str
+
+
 @app.post("/ask")
-def ask_bot(query):
-    print('Loading...')
+def ask_bot(data: QueryStructure):
+    query = data.query
+    print("Loading...")
     context = ""  # TODO: Replace with vector.get_similar(query)
     prompt = generate_prompt(query, context)
 

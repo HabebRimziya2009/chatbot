@@ -30,13 +30,17 @@ async function sendMessage() {
   const loadingMessage = appendMessage("...", "bot-message");
 
   try {
-    const response = await fetch("0.0.0.0:8000/ask", {
+    const response = await fetch("https://chatbot-backend-hxus.onrender.com/ask", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({ message })
     });
+
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
 
     const data = await response.json();
 
