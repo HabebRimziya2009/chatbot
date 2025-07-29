@@ -42,8 +42,10 @@ class QueryStructure(BaseModel):
 
 
 @app.post("/ask")
-def ask_bot(data: QueryStructure):
-    query = data.query
+def ask_bot(_input: QueryStructure):
+    print(_input)
+    print(_input.query)
+    query = _input.query
     print("Loading...")
     context = ""  # TODO: Replace with vector.get_similar(query)
     prompt = generate_prompt(query, context)
@@ -71,4 +73,4 @@ def ask_bot(data: QueryStructure):
     TEMP_CHAT_HISTORY.append({"role": "user", "message": _answer})
     TEMP_CHAT_HISTORY.append({"role": "bot", "message": _answer})
 
-    return _answer, _tool
+    return {"response": _answer, "tool": _tool}
