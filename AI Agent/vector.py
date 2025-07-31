@@ -11,9 +11,9 @@ import os
 import logging
 import time
 
-openai_api_key = os.getenv("OPENAI_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 embedding_model = OpenAIEmbeddings(
-    openai_api_key=openai_api_key,
+    openai_api_key=OPENAI_API_KEY,
     model="text-embedding-3-small"
 )
 
