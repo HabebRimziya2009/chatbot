@@ -13,7 +13,7 @@ import time
 
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 embedding_model = OpenAIEmbeddings(
-    openai_api_key=None,
+    openai_api_key=OPENAI_API_KEY,
     model="text-embedding-3-small"
 )
 
