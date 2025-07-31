@@ -10,7 +10,7 @@ from fastapi.responses import JSONResponse
 app = FastAPI()
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-genai.configure(api_key="AIzaSyCvxwnQ3w0ENoTe5u68W1-HXTdgKlspBAk")
+genai.configure(api_key=GOOGLE_API_KEY)
 
 TEMP_CHAT_HISTORY = []
 
