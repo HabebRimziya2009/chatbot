@@ -1,7 +1,7 @@
 import google.generativeai as genai
 import vector
 import json
-from schemas import AnswerStructure, AskRequest
+from schema_classes import AnswerStructure, AskRequest
 import os
 
 from fastapi import FastAPI
