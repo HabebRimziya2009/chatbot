@@ -1,6 +1,11 @@
 google-generativeai
 google-genai
 google~=3.0.0
+langchain
+langchain-chroma
+langchain-community
+langchain-openai
+pdfplumber
 pydantic~=2.11.7
 fastapi
 uvicorn

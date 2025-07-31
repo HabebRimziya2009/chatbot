@@ -24,7 +24,7 @@ async function sendMessage(message) {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ query: message })
+      body: JSON.stringify({ question: message })
     });
 
     if (!response.ok) {

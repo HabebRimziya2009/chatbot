@@ -1,41 +1,22 @@
 import google.generativeai as genai
+import vector
 import json
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, Field
+from schemas import AnswerStructure, AskRequest
+import os
 
-# GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-genai.configure(api_key="AIzaSyCvxwnQ3w0ENoTe5u68W1-HXTdgKlspBAk")
-TEMP_CHAT_HISTORY = []
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Change to your frontend domains in production
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+genai.configure(api_key="AIzaSyCvxwnQ3w0ENoTe5u68W1-HXTdgKlspBAk")
 
-
-class QueryRequest(BaseModel):
-    query: str
-
-
-class AnswerStructure(BaseModel):
-    answer: str = Field(description="The answer to the user's question")
-    send: bool = Field(description="Should the question be sent to a human colleague? (True/False)")
-
-
-@app.post("/ask")
-async def ask(req: QueryRequest):
-    response, tool = ask_bot(req.query)
-    return {"response": response, "tool": tool}
+TEMP_CHAT_HISTORY = []
 
 
 def generate_prompt(query, context):
-    with open("./prompt.txt", "r") as file:
+    with open("prompt.txt", "r") as file:
         prompt = ''.join(
             '\n' if line == '\n' or line.rstrip('\n').endswith(':') else line.rstrip('\n')
             for line in file
@@ -45,8 +26,9 @@ def generate_prompt(query, context):
 
 
 def ask_bot(query):
-    print("Loading...")
-    context = ""  # TODO: Replace with vector.get_similar(query)
+    print('Loading...')
+    context = vector.get_similar(query)
+    print(context)
     prompt = generate_prompt(query, context)
 
     model = genai.GenerativeModel(
@@ -67,9 +49,22 @@ def ask_bot(query):
     print(data)
 
     _answer = data["answer"]
-    _tool = data["tool"] if "tool" in data.keys() else "NOTOOL"
+    _tool = bool(data["tool"]) if "tool" in data.keys() else "NOTOOL"
 
-    TEMP_CHAT_HISTORY.append({"role": "user", "message": _answer})
     TEMP_CHAT_HISTORY.append({"role": "bot", "message": _answer})
 
     return _answer, _tool
+
+
+@app.post("/ask")
+async def ask_question(request: AskRequest):
+    question = request.question
+
+    TEMP_CHAT_HISTORY.append({'role': "user", "message": question})
+
+    answer, send = ask_bot(question)
+
+    return JSONResponse(content={
+        "answer": answer,
+        "send": send
+    })
