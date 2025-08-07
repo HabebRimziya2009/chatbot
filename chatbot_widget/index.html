@@ -21,7 +21,7 @@
     </div>
     <div id="chat-input-container">
       <input type="text" id="chat-input" placeholder="Type your message..." autocomplete="off">
-      <button id="chat-send" onclick="sendMessage()">
+      <button id="chat-send" onclick="sendMessage(document.getElementById('chat-input').value.trim())">
         <i class="fas fa-paper-plane"></i>
       </button>
     </div>

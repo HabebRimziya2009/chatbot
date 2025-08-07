@@ -41,6 +41,7 @@ async function sendMessage(message) {
   }
 
   input.disabled = false;
+  input.value = "";
   sendBtn.disabled = false;
   input.focus();
 }
@@ -69,7 +70,9 @@ document.addEventListener("DOMContentLoaded", () => {
   input.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
       event.preventDefault(); // prevents newline if it's a textarea
-      sendMessage();
+      const message = input.value.trim();
+      sendMessage(message);
+      input.value = "";
     }
   });
 });
