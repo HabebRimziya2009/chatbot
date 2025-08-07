@@ -1,5 +1,5 @@
 import google.generativeai as genai
-import vector
+from . import vector
 import json
 from schema_classes import AnswerStructure, AskRequest
 import os
