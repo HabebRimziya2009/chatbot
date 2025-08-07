@@ -1,7 +1,7 @@
 import google.generativeai as genai
 from . import vector
 import json
-from schema_classes import AnswerStructure, AskRequest
+from . import schema_classes as sc
 import os
 
 from fastapi import FastAPI
@@ -37,7 +37,7 @@ def ask_bot(query):
         generation_config=genai.types.GenerationConfig(
             temperature=0.7,
             response_mime_type="application/json",
-            response_schema=list[AnswerStructure],
+            response_schema=list[sc.AnswerStructure],
         )
     )
 
@@ -57,7 +57,7 @@ def ask_bot(query):
 
 
 @app.post("/ask")
-async def ask_question(request: AskRequest):
+async def ask_question(request: sc.AskRequest):
     question = request.question
 
     TEMP_CHAT_HISTORY.append({'role': "user", "message": question})
