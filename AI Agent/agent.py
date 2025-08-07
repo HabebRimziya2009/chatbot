@@ -1,7 +1,7 @@
 import google.generativeai as genai
-from . import vector
+import vector
 import json
-from . import schema_classes as sc
+import schema_classes as sc
 import os
 
 from fastapi import FastAPI
@@ -10,6 +10,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+# noinspection PyTypeChecker
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # your Netlify site
