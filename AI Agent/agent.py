@@ -12,7 +12,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://euphonious-alfajores-3ae39a.netlify.app"],  # your Netlify site
+    allow_origins=["*"],  # your Netlify site
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
