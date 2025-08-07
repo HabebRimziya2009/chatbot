@@ -19,7 +19,7 @@ async function sendMessage(message) {
   const loadingMessage = appendMessage("...", "bot-message");
 
   try {
-    const response = await fetch("https://chatbot-backend-hxus.onrender.com/ask", {
+    const response = await fetch("https://chatbot-tjtk.onrender.com/ask", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
